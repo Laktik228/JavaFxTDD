@@ -1,3 +1,4 @@
+package main.java.view;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -19,11 +20,14 @@ public class App extends Application {
     private VBox container;
     private Button submit;
     private EventHandler<ActionEvent> eventHandler = action -> validate();
+    private TextField emailField = new TextField();
+    private TextField passwordField = new TextField();
+    
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.container = new VBox(new Text("Registration Form"));
-        this.passwordArea = createField("Password");
-        this.emailArea  = createField("Email");
+        this.passwordArea = this.createField("Password");
+        this.emailArea  = this.createField("Email");
         this.container.getChildren().add(emailArea);
         this.container.getChildren().add(passwordArea);
 
@@ -36,37 +40,39 @@ public class App extends Application {
 
     }
 
-    private static HBox createField(String labelName) {
-        TextField field = new TextField();
+    private HBox createField(String labelName) {
         Label fieldLabel  = new Label(labelName + ":");
         HBox fieldArea = new HBox(fieldLabel);
-        fieldArea.getChildren().add(field);
+        if(labelName == "Email") {
+            fieldArea.getChildren().add(this.emailField);
+        }
+        else{
+            fieldArea.getChildren().add(this.passwordField);
+        }
         return fieldArea;
     }
 
     private void validate() {
-        var emailField = (TextField) this.emailArea.lookup("");
-        var passwordField = (TextField) this.emailArea.lookup("");
-        var text = emailField.getText();
-        if(text == "" || text == null){
+        var emailField = this.emailField.getText();
+        var passwordField = this.passwordField.getText();
+        if(emailField == "" || emailField == null){
             this.showError("Email is missing");
             return;
         }
-        if(!text.matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")){
+        if(!emailField.matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")){
             this.showError("Email is in incorrect form");
             return;
         }
 
-        text = passwordField.getText();
-        if(text == "" || text == null){
+        if(passwordField == "" || passwordField == null){
             this.showError("Password is missing");
             return;
         }
-        if(text.length() < 7){
+        if(passwordField.length() < 7){
             this.showError("Password is in incorrect form: Should be at least 7 letters long");
             return;
         }
-        if(!text.matches("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\*\\^\\&\\@\\!])")){
+        if(!passwordField.matches("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\*\\^\\&\\@\\!])")){
             this.showError("Password is in incorrect form: Does not contain the following - at least 1 letter and number; at least 1 character from *^&@!");
             return;
         }
