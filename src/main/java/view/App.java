@@ -52,31 +52,32 @@ public class App extends Application {
         return fieldArea;
     }
 
-    private void validate() {
+    private Boolean validate() {
         var emailField = this.emailField.getText();
         var passwordField = this.passwordField.getText();
         if(emailField == "" || emailField == null){
             this.showError("Email is missing");
-            return;
+            return false;
         }
         if(!emailField.matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")){
             this.showError("Email is in incorrect form");
-            return;
+            return false;
         }
 
         if(passwordField == "" || passwordField == null){
             this.showError("Password is missing");
-            return;
+            return false;
         }
         if(passwordField.length() < 7){
             this.showError("Password is in incorrect form: Should be at least 7 letters long");
-            return;
+            return false;
         }
         if(!passwordField.matches("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\*\\^\\&\\@\\!])")){
             this.showError("Password is in incorrect form: Does not contain the following - at least 1 letter and number; at least 1 character from *^&@!");
-            return;
+            return false;
         }
         this.showSuccess();
+        return true;
     }
 
     private void showError(String value){
